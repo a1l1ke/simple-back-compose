@@ -1,11 +1,12 @@
 spring:
   config:
+    import: optional:file:.env[.properties]
     activate:
       on-profile: local
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/mydb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:rootpass}
+    url: jdbc:mysql://${AIVEN_MYSQL_HOST}:${AIVEN_MYSQL_PORT}/${AIVEN_MYSQL_DB}?sslMode=REQUIRED&serverTimezone=UTC
+    username: ${AIVEN_MYSQL_USER}
+    password: ${AIVEN_MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 5000
