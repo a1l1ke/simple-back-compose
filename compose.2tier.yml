@@ -1,0 +1,48 @@
+# compose를 통해 실행할 서비스들을 정의
+services:
+  # compose으로 묶인 하위 컨테이너들
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    env_file:
+      - .env
+    # .env를 파일에 넣는 걸 넘어서서 직접 주입해줘야함
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend-net
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - APP_MESSAGE=${APP_MESSAGE}
+    networks:
+      - backend-net
+    # 인스턴스 실행을 감지
+    depends_on:
+     - db
+    # 실패하면 재시작해라
+    restart: on-failure
+    ports:
+      - 9988:${SERVER_PORT}
+
+volumes:
+  mysql-data:
+
+networks:
+  backend-net:
