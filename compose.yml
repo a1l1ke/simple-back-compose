@@ -16,6 +16,8 @@ services:
       # ro -> read only
     depends_on:
       - app1
+    networks:
+      - frontend-net
 
   app1:
     build:
@@ -33,6 +35,7 @@ services:
       - APP_MESSAGE=${APP_MESSAGE}
     networks:
       - backend-net
+      - frontend-net
     depends_on:
       - db
     restart: on-failure
@@ -58,3 +61,4 @@ volumes:
 
 networks:
   backend-net:
+  frontend-net:
