@@ -34,7 +34,8 @@ services:
     networks:
       - backend-net
     # 인스턴스 실행을 감지
-    depends_on: db
+    depends_on:
+     - db
     # 실패하면 재시작해라
     restart: on-failure
     ports:
