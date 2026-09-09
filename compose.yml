@@ -16,6 +16,7 @@ services:
       # ro -> read only
     depends_on:
       - app1
+      - app2
     networks:
       - frontend-net
 
@@ -32,7 +33,30 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - APP_MESSAGE=${APP_MESSAGE}
+#      - APP_MESSAGE=${APP_MESSAGE}
+      - APP_MESSAGE=1번 서버
+    networks:
+      - backend-net
+      - frontend-net
+    depends_on:
+      - db
+    restart: on-failure
+
+  app2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app2
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      #      - APP_MESSAGE=${APP_MESSAGE}
+      - APP_MESSAGE=2번 서버
     networks:
       - backend-net
       - frontend-net
