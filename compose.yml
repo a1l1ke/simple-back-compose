@@ -7,11 +7,12 @@ services:
     restart: always
     env_file:
       - .env
-    #    environment:
-    #      MYSQL_DATABASE: ${DB_NAME}
-    #      MYSQL_USER: ${DB_USER}
-    #      MYSQL_PASSWORD: ${DB_PASSWORD}
-    #      MYSQL_RANDOM_ROOT_PASSWORD: true
+    # .env를 파일에 넣는 걸 넘어서서 직접 주입해줘야함
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: true
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -23,11 +24,19 @@ services:
     container_name: spring-app
     env_file:
       - .env
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - APP_MESSAGE=${APP_MESSAGE}
     networks:
       - backend-net
     # depends_on: ...
     # restart: ...
 volumes:
+
   mysql-data:
 
 networks:
